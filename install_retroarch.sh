@@ -92,33 +92,48 @@ echo "------"
 echo "Make successful. Installing RetroArch:"
 sleep 3
 sudo make install
-
-echo "------"
-echo "Installation successful!"
 cd ..
-echo "Initialising RetroArch"
-timeout 3s retroarch
 
-read -p "Do you want to restore your config file? (y/N): " config
-if [[ $config =~ ^[Yy]$ ]]; then
-  cp "$PWD/retroarch.cfg" "/home/$USER/.config/retroarch/"
-fi
+if [[ -f "/usr/local/bin/retroarch" ]]; then
+  echo "------"
+  echo "Installation successful!"
+  echo "Initialising RetroArch"
+  timeout 3s retroarch
 
-read -p "Do you want to restore your cores? (y/N): " cores
-if [[ $cores =~ ^[Yy]$ ]]; then
-  rsync -av "$PWD/Cores/" "/home/$USER/.config/retroarch/cores/"
-fi
+  read -p "Do you want to restore your config file? (y/N): " config
+  if [[ $config =~ ^[Yy]$ ]]; then
+    cp "$PWD/retroarch.cfg" "/home/$USER/.config/retroarch/"
+  fi
 
-read -p "Do you want to restore your ROM files? (y/N): " rom 
-if [[ $rom =~ ^[Yy]$ ]]; then
-  rsync -av "$PWD/ROM/" "/home/$USER/.config/retroarch/downloads/"
-fi
+  read -p "Do you want to restore your cores? (y/N): " cores
+  if [[ $cores =~ ^[Yy]$ ]]; then
+    rsync -av "$PWD/Cores/" "/home/$USER/.config/retroarch/cores/"
+  fi
 
-read -p "Do you want to launch RetroArch? (y/N): " launch
-if [[ $launch =~ ^[Yy]$ ]]; then
-  retroarch
+  read -p "Do you want to restore your ROM files? (y/N): " rom 
+  if [[ $rom =~ ^[Yy]$ ]]; then
+    rsync -av "$PWD/ROM/" "/home/$USER/.config/retroarch/downloads/"
+  fi
+  
+  read -p "Do you want to delete downloaded RetroArch repository files from GitHub? (y/N): " cleanup 
+  if [[ $cleanup =~ ^[Yy]$ ]]; then
+    if [[ -d "RetroArch" ]]; then
+      echo "Found RetroArch folder - removing"
+      sudo rm -rf "$PWD/RetroArch/"
+    else
+      echo "RetroArch folder not found - moving on"
+    fi
+  else
+    echo "Ok then, keeping all the files in place"
+  fi
+
+  read -p "Do you want to launch RetroArch? (y/N): " launch
+  if [[ $launch =~ ^[Yy]$ ]]; then
+    retroarch
+  else
+    echo "Later then :)"
+  fi
 else
-  echo "Ok then :)"
+  "Built may have encountered errors. Try fixing them and run the script again."
 fi
-
 exit 0
