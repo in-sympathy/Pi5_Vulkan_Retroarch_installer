@@ -9,4 +9,5 @@ Due to reinstalling an operating system on my Raspberry Pi 5 from time to time a
 6. Build RetroArch properly to work on a Pi 5 with Vulkan and Wayland.
 7. Offer to restore your RetroArch config, ROM and Cores from a backup if you have it.
 8. Offer to remove downloaded RetroArch repository files from GitHub after successful build.
-9. Launch and try RetroArch - enjoy :).
+9. Launch and try RetroArch. 
+10. Enjoy 🙌🏻
