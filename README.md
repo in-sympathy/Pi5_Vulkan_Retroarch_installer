@@ -1,7 +1,7 @@
 Welcome!
 
 Due to reinstalling an operating system on my Raspberry Pi 5 from time to time and then having to reinstall RetroArch from source manually every time I decided to automate this process a little with this simple bash script. It will do the following for you:
-1. Ask if you have any ROM and Core files you want to use with RetroArch and offer so you'd copy those files into the corresponding ROM and Cores folders it'll create for you if needed.
+1. Ask if you have any ROM and Core files you want to use with RetroArch and offer you to manually copy those files into the corresponding ROM and Cores folders it'll create for you if needed.
 2. Check if you have a previously installed RetroArch via apt and remove it along with any unnecessary packages.
 3. Download RetroArch source files from an official GitHub repo.
 4. Install all the necessary dependencies so you could have Vulkan, Pulse Audio and joystick support.
