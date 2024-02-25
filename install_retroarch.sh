@@ -117,7 +117,7 @@ if [[ -f "/usr/local/bin/retroarch" ]]; then
   read -p "$(tput setaf 1) Do you want to restore your cores? (y/N): $(tput sgr0)" cores
   if [[ $cores =~ ^[Yy]$ ]]; then
     rsync -av "$PWD/Cores/" "/home/$USER/.config/retroarch/cores/"
-    echo "$(tput setaf 2) Cores copied $(tput sgr0)
+    echo "$(tput setaf 2) Cores copied $(tput sgr0)"
   fi
 
   read -p "$(tput setaf 1) Do you want to restore your ROM files? (y/N): $(tput sgr0)" rom 
