@@ -77,7 +77,7 @@ sleep 3
 available_versions=$(git tag -l)
 echo "$(tput setaf 4) $available_versions $(tput sgr0)"
 # Get user input for desired version
-read -p "$(tput setaf 3) Enter the desired version (e.g. v1.9.9): $(tput sgr0)" desired_version
+read -p "$(tput setaf 3) Choose desired version (e.g. v1.9.9): $(tput sgr0)" desired_version
 # Check if entered version exists
 if ! grep -q "$desired_version" <<< "$available_versions"; then
   echo "$(tput setaf 1) Error: Invalid version. Please choose from the listed options. $(tput sgr0)"
