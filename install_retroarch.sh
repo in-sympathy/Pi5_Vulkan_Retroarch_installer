@@ -1,150 +1,150 @@
 #!/bin/bash
 if [[ -d "ROM" ]]; then
-  echo "Let's save you even more time :) "
-  echo "'ROM' folder was found. Please put all your ROM files in it"
+  echo "$(tput setaf 6) Let's save some time :) $(tput sgr0)"
+  echo "$(tput setaf 2)'ROM' folder was found. Please put all your ROM files in it$(tput sgr0)"
 else
   mkdir ROM
-  echo ""
-  echo "Creating a 'ROM' folder. Please put all your ROM files in it"
+  echo "$(tput setaf 3) Creating a 'ROM' folder. Please put all your ROM files in it $(tput sgr0)"
 fi
-read -p "If you copied all your ROM files - type 'Yy' and press Enter: " copy_rom
+read -p "$(tput setaf 3) If you copied all your ROM files - type 'Yy' and press Enter: $(tput sgr0)" copy_rom
 
 if [[ $copy_rom =~ ^[Yy]$ ]]; then
-  echo "Great, proceeding with the installation"
-else
-  exit 1
+  echo "$(tput setaf 2) Great, proceeding with the installation $(tput sgr0)"
+  echo ""
+#else
+#  echo "$(tput setaf 1) Aborting installation $(tput sgr0)"
+#  exit 1
 fi
 
 if [[ -d "Cores" ]]; then
-  echo ""
-  echo "'Cores' folder was found. Please put all your core files in it"
+  echo "$(tput setaf 2) 'Cores' folder was found. Please put all your core files in it $(tput sgr0)"
 else
   mkdir Cores
-  echo ""
-  echo "Creating a 'Cores' folder. Please put all your core files in it"
+  echo "$(tput setaf 3) Creating a 'Cores' folder. Please put all your core files in it $(tput sgr0)"
 fi
-read -p "If you copied all your core files - type 'Yy' and press Enter: " copy_cores
+read -p "$(tput setaf 3) If you copied all your CORE files - type 'Yy' and press Enter: $(tput sgr0)" copy_cores
 
 if [[ $copy_cores =~ ^[Yy]$ ]]; then
-  echo "Great, proceeding with the installation"
-else
-  exit 1
+  echo "$(tput setaf 2) Great, proceeding with the installation $(tput sgr0)"
+  echo ""
+#else
+#  echo "$(tput setaf 1) Aborting installation $(tput sgr0)"
+#  exit 1
 fi
 
-echo "------"
-echo "Checking for any previous builds..."
+echo "$(tput setaf 3) Checking for any previous builds... $(tput sgr0)"
 package_name="retroarch"
 if dpkg -l "$package_name" >/dev/null 2>&1; then
-  echo "Some other version of RetroArch is installed. Trying to remove:"
+  echo "$(tput setaf 1) Some other version of RetroArch is installed. Trying to remove: $(tput sgr0)"
   sudo apt update && sudo apt remove retroarch -y && sudo apt autoremove -y
   sleep 3
 else
-  echo "RetroArch is not installed. Proceeding with the build"
+  echo "$(tput setaf 2) RetroArch is not installed. Proceeding with the build $(tput sgr0)"
   sleep 3
 fi
 
-echo "Checking for old configs..."
+echo "$(tput setaf 3) Checking for old configs... $(tput sgr0)"
 if [[ -d "/home/$USER/.config/retroarch/" ]]; then
-  read -p "Found old configuration. Remove? (y/N): " old_config_removal
+  read -p "$(tput setaf 1) Found existing configuration. Remove? (y/N): $(tput sgr0)" old_config_removal
   if [[ $old_config_removal =~ ^[Yy]$ ]]; then
     sudo rm -rf "/home/$USER/.config/retroarch/"
-    echo "Old config files were successfully removed"
+    echo "$(tput setaf 2) Old config files were successfully removed $(tput sgr0)"
   else
-    echo "Keeping old configuration"
+    echo "$(tput setaf 2) Keeping existing configuration. Please remove manually if you experience any issues via $(tput setaf 1)'sudo rm -rf /home/$USER/.config/retroarch/'  $(tput sgr0)"
+    sleep 3
   fi
 fi
   
-echo "------"
-echo "Clone RetroArch repository (if not already present)"
-if [ ! -d RetroArch ]; then
+echo "$(tput setaf 3) Preparing to clone from GitHub $(tput sgr0)"
+if [ ! -d "RetroArch" ]; then
+  echo "$(tput setaf 2) Previously cloned files were not found - cloning from GitHub $(tput sgr0)"
   git clone https://github.com/libretro/RetroArch.git
 else
+  echo "$(tput setaf 1) Found previously cloned files - removing previous builds $(tput sgr0)"
   cd RetroArch && sudo make uninstall
   cd .. && sudo rm -rf RetroArch
+  echo "$(tput setaf 3) Cloning from GitHub $(tput sgr0)"
   git clone https://github.com/libretro/RetroArch.git
 fi
 
-echo "------"
-echo "Installing the necessary packages: "
+echo "$(tput setaf 3) Installing the necessary packages: $(tput sgr0)"
 sudo apt update && sudo apt install -y git rsync xboxdrv joystick jstest-gtk build-essential libudev-dev libegl-dev libgles-dev libx11-xcb-dev libpulse-dev libasound2-dev libvulkan-dev mesa-vulkan-drivers
 sudo apt build-dep -y retroarch
 
-echo "------"
-echo "Listing available RetroArch versions (tags): "
+echo "$(tput setaf 3) Listing available RetroArch versions (tags): $(tput sgr0)"
 cd RetroArch
 sleep 3
 available_versions=$(git tag -l)
-echo "$available_versions"
+echo "$(tput setaf 4) $available_versions $(tput sgr0)"
 # Get user input for desired version
-read -p "Enter the desired version (e.g. v1.9.9): " desired_version
+read -p "$(tput setaf 3) Enter the desired version (e.g. v1.9.9): $(tput sgr0)" desired_version
 # Check if entered version exists
 if ! grep -q "$desired_version" <<< "$available_versions"; then
-  echo "Error: Invalid version. Please choose from the listed options."
+  echo "$(tput setaf 1) Error: Invalid version. Please choose from the listed options. $(tput sgr0)"
   exit 1
 fi
 # Switch to the selected version
 git checkout "$desired_version"
-echo "Switched to RetroArch version $desired_version."
+echo "$(tput setaf 2) Switched to RetroArch version $desired_version. $(tput sgr0)"
 sleep 3
 
-echo "------"
-echo "Building and installing Retroarch from source for the Pi 5 with Vulkan support: "
-echo "------"
-echo "Configuring RetroArch to use Vulkan, Udev and Pulse Audio and disabling X11 and FFMPEG:"
+echo "$(tput setaf 6) Building and installing Retroarch from source for the Pi 5 with Vulkan support $(tput sgr0)"
+sleep 3
+echo "$(tput setaf 3) Configuring RetroArch to use Vulkan, Udev and Pulse Audio and disabling X11 and FFMPEG: $(tput sgr0)"
 sleep 3
 sudo ./configure --enable-vulkan --enable-pulse --enable-ssl --enable-udev --disable-x11 --disable-ffmpeg
 
-echo "------"
-echo "Making it with all cores:"
+echo "$(tput setaf 3) Making it with all available cores: $(tput sgr0)"
 sleep 3
 sudo make -j$(nproc)
 
-echo "------"
-echo "Make successful. Installing RetroArch:"
+echo "$(tput setaf 2) Make successful. Installing RetroArch: $(tput sgr0)"
 sleep 3
 sudo make install
 cd ..
 
 if [[ -f "/usr/local/bin/retroarch" ]]; then
-  echo "------"
-  echo "Installation successful!"
-  echo "Initialising RetroArch"
+  echo "$(tput setaf 2) Installation successful! $(tput sgr0)"
+  echo "$(tput setaf 3) Initialising RetroArch $(tput sgr0)"
   timeout 3s retroarch
 
-  read -p "Do you want to restore your config file? (y/N): " config
+  read -p "$(tput setaf 1) Do you want to restore your config file? (y/N): $(tput sgr0)" config
   if [[ $config =~ ^[Yy]$ ]]; then
     cp "$PWD/retroarch.cfg" "/home/$USER/.config/retroarch/"
+    echo "$(tput setaf 2) Config copied successfully $(tput sgr0)"
   fi
 
-  read -p "Do you want to restore your cores? (y/N): " cores
+  read -p "$(tput setaf 1) Do you want to restore your cores? (y/N): $(tput sgr0)" cores
   if [[ $cores =~ ^[Yy]$ ]]; then
     rsync -av "$PWD/Cores/" "/home/$USER/.config/retroarch/cores/"
+    echo "$(tput setaf 2) Cores copied $(tput sgr0)
   fi
 
-  read -p "Do you want to restore your ROM files? (y/N): " rom 
+  read -p "$(tput setaf 1) Do you want to restore your ROM files? (y/N): $(tput sgr0)" rom 
   if [[ $rom =~ ^[Yy]$ ]]; then
     rsync -av "$PWD/ROM/" "/home/$USER/.config/retroarch/downloads/"
+    echo "$(tput setaf 2) ROMs copied successfully $(tput sgr0)"
   fi
   
-  read -p "Do you want to delete downloaded RetroArch repository files from GitHub? (y/N): " cleanup 
+  read -p "$(tput setaf 1) Do you want to delete downloaded RetroArch repository files from GitHub? (y/N): $(tput sgr0)" cleanup 
   if [[ $cleanup =~ ^[Yy]$ ]]; then
     if [[ -d "RetroArch" ]]; then
-      echo "Found RetroArch folder - removing"
+      echo "$(tput setaf 1) Found RetroArch folder - removing $(tput sgr0)"
       sudo rm -rf "$PWD/RetroArch/"
     else
-      echo "RetroArch folder not found - moving on"
+      echo "$(tput setaf 3) RetroArch folder not found - moving on $(tput sgr0)"
     fi
   else
-    echo "Ok then, keeping all the files in place"
+    echo "$(tput setaf 3) Ok then, keeping all the files in place $(tput sgr0)"
   fi
 
-  read -p "Do you want to launch RetroArch? (y/N): " launch
+  read -p "$(tput setaf 6) Do you want to launch RetroArch? (y/N): $(tput sgr0)" launch
   if [[ $launch =~ ^[Yy]$ ]]; then
     retroarch
   else
-    echo "Later then :)"
+    echo "$(tput setaf 3) Later then :) $(tput sgr0)"
   fi
 else
-  "Built may have encountered errors. Try fixing them and run the script again."
+  "$(tput setaf 1) Built may have encountered errors. Try fixing them and run the script again. $(tput sgr0)"
 fi
 exit 0
