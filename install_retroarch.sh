@@ -32,7 +32,7 @@ else
 fi
 
 echo "------"
-echo "Checking for any previous builds"
+echo "Checking for any previous builds..."
 package_name="retroarch"
 if dpkg -l "$package_name" >/dev/null 2>&1; then
   echo "Some other version of RetroArch is installed. Trying to remove:"
@@ -43,6 +43,15 @@ else
   sleep 3
 fi
 
+echo "Checking for old configs..."
+if [[ -d "/home/$USER/.config/retroarch/" ]]; then
+  read -p "Found old configuration. Remove? (y/N): " old_config_removal
+  if [[ $old_config_removal =~ ^[Yy]$ ]]; then
+    echo "Removed"
+    sudo rm -rf "/home/$USER/.config/retroarch/"
+  fi
+fi
+  
 echo "------"
 echo "Clone RetroArch repository (if not already present)"
 if [ ! -d RetroArch ]; then
