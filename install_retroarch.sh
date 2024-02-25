@@ -47,8 +47,10 @@ echo "Checking for old configs..."
 if [[ -d "/home/$USER/.config/retroarch/" ]]; then
   read -p "Found old configuration. Remove? (y/N): " old_config_removal
   if [[ $old_config_removal =~ ^[Yy]$ ]]; then
-    echo "Removed"
     sudo rm -rf "/home/$USER/.config/retroarch/"
+    echo "Old config files were successfully removed"
+  else
+    echo "Keeping old configuration"
   fi
 fi
   
