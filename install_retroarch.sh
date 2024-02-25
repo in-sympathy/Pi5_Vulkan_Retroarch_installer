@@ -129,13 +129,13 @@ if [[ -f "/usr/local/bin/retroarch" ]]; then
   read -p "$(tput setaf 1) Do you want to delete downloaded RetroArch repository files from GitHub? (y/N): $(tput sgr0)" cleanup 
   if [[ $cleanup =~ ^[Yy]$ ]]; then
     if [[ -d "RetroArch" ]]; then
-      echo "$(tput setaf 1) Found RetroArch folder - removing $(tput sgr0)"
+      echo "$(tput setaf 1) Removing GitHub downloads $(tput sgr0)"
       sudo rm -rf "$PWD/RetroArch/"
     else
-      echo "$(tput setaf 3) RetroArch folder not found - moving on $(tput sgr0)"
+      echo "$(tput setaf 3) GitHub downloads were not found - moving on $(tput sgr0)"
     fi
   else
-    echo "$(tput setaf 3) Ok then, keeping all the files in place $(tput sgr0)"
+    echo "$(tput setaf 3) Ok then, keeping all of the files in place $(tput sgr0)"
   fi
 
   read -p "$(tput setaf 6) Do you want to launch RetroArch? (y/N): $(tput sgr0)" launch
